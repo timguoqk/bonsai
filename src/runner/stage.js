@@ -233,47 +233,15 @@ define([
      * @private
      */
     loop: function() {
-
-      this.emitFrame();
-
-      var registry = this.registry;
-      var movieRegistry = registry.movies;
-
-      var movies = tools.removeValueFromArray(movieRegistry.movies);
-
-      /*
-        The `movies` array may contain gaps (if elements are removed from the
-        stage during the iteration) and increase its length during the iteration
-        (if timelines are added to the stage during iteration)
-       */
-      var len, movie, i = 0;
-      while (i < len  // check whether we are within the cached length
-          || i < (len = movies.length)) { // check whether we are within the actual length and cache the length
-
-        movie = movies[i];
-        if (movie) {
-          movie.emitFrame();
-        }
-
-        i += 1;
-      }
-
+      this.playFrame();
 
       // Emit an event to mark the fact that we've emitted all submovies' frames:
       this.emit('subMoviesAdvanced');
 
-      var moviesToIncrement = [this].concat(movies);
-      // Go through all movies and increment their respective frames:
-      for (i = 0, len = moviesToIncrement.length; i < len; ++i) {
-        movie = moviesToIncrement[i];
-        if (movie && movie.isPlaying) {
-          movie.incrementFrame();
-        }
-      }
-
       var message;
       var messagesIndexesById = this._queuedFramesById;
       var queuedFrames = this._queuedFrames;
+      var registry = this.registry;
       var displayObjectRegistry = registry.displayObjects,
           needsDrawRegistry = registry.needsDraw,
           needsInsertionRegistry = registry.needsInsertion;
