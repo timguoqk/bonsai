@@ -283,18 +283,6 @@ define([
   };
 
   var timelineMethods = tools.mixin({}, methods);
-  timelineMethods._activate = function(stage) {
-    activate.call(this, stage);
-    if (stage) {
-      stage.registry.movies.add(this);
-    }
-  };
-  timelineMethods._deactivate = function() {
-    if (this.stage) {
-      this.stage.registry.movies.remove(this);
-    }
-    deactivate.call(this);
-  };
 
   return {
     DisplayList: DisplayList,
