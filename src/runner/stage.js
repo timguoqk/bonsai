@@ -425,7 +425,7 @@ define([
     }
   };
 
-  tools.mixin(proto, EventEmitter, displayList.timelineMethods, Timeline);
+  tools.mixin(proto, EventEmitter, displayList.methods, Timeline);
   delete proto.markUpdate;
 
   return Stage;

@@ -150,22 +150,6 @@ define([
     }
   };
 
-  function activate(stage) {
-    DisplayObject.prototype._activate.call(this, stage);
-    var children = this.displayList.children;
-    for (var i = 0, length = children.length; i < length; i += 1) {
-      children[i]._activate(stage);
-    }
-  }
-
-  function deactivate() {
-    DisplayObject.prototype._deactivate.call(this);
-    var children = this.displayList.children;
-    for (var i = 0, length = children.length; i < length; i += 1) {
-      children[i]._deactivate();
-    }
-  }
-
   /**
    * Ready made methods that can be used by / mixed into objects owning a
    * display list and inherit from DisplayObject
@@ -180,14 +164,26 @@ define([
      * @param {Stage} stage
      * @private
      */
-    _activate: activate,
+    _activate: function(stage) {
+      DisplayObject.prototype._activate.call(this, stage);
+      var children = this.displayList.children;
+      for (var i = 0, length = children.length; i < length; i += 1) {
+        children[i]._activate(stage);
+      }
+    },
 
     /**
      * Deactivates the object and all of its children
      *
      * @private
      */
-    _deactivate: deactivate,
+    _deactivate: function() {
+      DisplayObject.prototype._deactivate.call(this);
+      var children = this.displayList.children;
+      for (var i = 0, length = children.length; i < length; i += 1) {
+        children[i]._deactivate();
+      }
+    },
 
     /**
      * Adds a child or an array of children to the object.
@@ -282,11 +278,8 @@ define([
     }
   };
 
-  var timelineMethods = tools.mixin({}, methods);
-
   return {
     DisplayList: DisplayList,
-    methods: methods,
-    timelineMethods: timelineMethods
+    methods: methods
   };
 });
