@@ -336,7 +336,7 @@ define([
       expect(calls).toEqual([]);
     });
 
-    it('should call the `emitFrame` method of every child that has one after emitting the advance event', function() {
+    it('should call the `emitFrame` method of every child that is a timeline after emitting the advance event', function() {
       var calls = [];
       var child2 = {emitFrame: function() { calls.push(2); }};
       var child1 = {next: child2, emitFrame: function() { calls.push(1); }};
@@ -353,6 +353,29 @@ define([
       timeline.on('advance', function() { calls.push('advance'); });
       timeline[methodName]();
       expect(calls).toEqual(['advance', 0, 1, 2]);
+    });
+
+    it('should emit an "tickEnd" event after calling the emitFrame() of the last child', function() {
+      var lastChildPassed = false;
+      var emittedAfterPassingLastChild;
+      var currentFrame = timeline.currentFrame;
+
+      timeline.displayList = {
+        children: [
+          { emitFrame: function() { lastChildPassed = true; } }
+        ]
+      };
+
+      var onTickEnd = jasmine.createSpy().andCallFake(function() {
+        emittedAfterPassingLastChild = lastChildPassed === true;
+      });
+      timeline
+        .on('tickEnd', onTickEnd)
+        .emitFrame();
+
+      expect(emittedAfterPassingLastChild).toBe(true);
+      expect(onTickEnd).toHaveBeenCalledWith(timeline, currentFrame);
+
     });
   }
 });

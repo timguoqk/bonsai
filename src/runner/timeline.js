@@ -6,6 +6,10 @@ define([
 
   var round = Math.round;
 
+  function isTimeline(displayObject) {
+    return typeof displayObject.emitFrame === 'function';
+  }
+
   /**
    * The Timeline mixin. It contains timeline functionality (controls a series
    * of frames).
@@ -63,11 +67,13 @@ define([
       var children = displayList && displayList.children;
       var child = children && children[0];
       while (child) {
-        if (typeof child.emitFrame === 'function') {
+        if (isTimeline(child)) {
           child.emitFrame(advancedTimelines);
         }
         child = child.next;
       }
+
+      this.emit('tickEnd', this, currentFrame);
 
       return advancedTimelines;
     },

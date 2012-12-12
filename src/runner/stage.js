@@ -235,9 +235,6 @@ define([
     loop: function() {
       this.playFrame();
 
-      // Emit an event to mark the fact that we've emitted all submovies' frames:
-      this.emit('subMoviesAdvanced');
-
       var message;
       var messagesIndexesById = this._queuedFramesById;
       var queuedFrames = this._queuedFrames;
